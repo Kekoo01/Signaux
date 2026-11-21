@@ -1,0 +1,28 @@
+{
+ "demo": false,
+ "generated_at": "2026-11-21T03:52:12Z",
+ "bar_time": "2026-11-21 03:30",
+ "stale": false,
+ "context": {
+  "price": 1.09682,
+  "ema20": 1.09687,
+  "rsi": 45.5,
+  "atr_pips": 4.5,
+  "trend": "down",
+  "session_ok": false,
+  "vol_ok": false,
+  "headline": "Hors session : le robot cherche des signaux de 02h à 12h (heure de la Jamaïque), du lundi au vendredi."
+ },
+ "active": null,
+ "recent": [],
+ "stats": {
+  "n": 0,
+  "wins": 0,
+  "avg_r": null,
+  "total_r": 0
+ },
+ "signals_today": 0,
+ "max_per_day": 4,
+ "min_score": 3,
+ "spread_pips": 2.3
+}
