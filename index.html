@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tableau EURUSD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#F1F3F6">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Une colonne : barre d'état collante, verdict du moment, pourquoi, signaux du jour, résultats, compte. */
+:root {
+  --bg: #F1F3F6; --surface: #FFFFFF; --fg: #151A23; --muted: #5B6575; --line: #D9DEE6;
+  --accent: #2B5FD9; --on-accent: #FFFFFF;
+  --sell: #C0392B; --buy: #1E8E5A; --wait: #8F5A0A; --off: #5B6575;
+  --sell-bg: #FBE9E7; --buy-bg: #E3F5EC; --wait-bg: #FBF0DC; --off-bg: #E7EAF0;
+  --display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1218; --surface: #161C25; --fg: #E8ECF2; --muted: #94A0B1; --line: #283140;
+    --accent: #6F9BFF; --on-accent: #0E1218;
+    --sell: #F0675A; --buy: #4CC38A; --wait: #E2A33B; --off: #94A0B1;
+    --sell-bg: #2B1815; --buy-bg: #12281E; --wait-bg: #2A2110; --off-bg: #1E2530;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1218; --surface: #161C25; --fg: #E8ECF2; --muted: #94A0B1; --line: #283140;
+  --accent: #6F9BFF; --on-accent: #0E1218;
+  --sell: #F0675A; --buy: #4CC38A; --wait: #E2A33B; --off: #94A0B1;
+  --sell-bg: #2B1815; --buy-bg: #12281E; --wait-bg: #2A2110; --off-bg: #1E2530;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h2 { font-family: var(--display); font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; display: flex; justify-content: space-between; gap: 8px; }
+h2 span { letter-spacing: 0; text-transform: none; font-family: var(--body); font-weight: 600; }
+
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar-in { max-width: 560px; margin: 0 auto; padding-block: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.name { font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
+.name small { font-family: var(--body); font-weight: 500; color: var(--muted); font-size: .8rem; margin-left: 6px; }
+.upd { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: .8rem; text-align: right; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--off); flex: none; }
+.dot.fresh { background: var(--buy); } .dot.aging { background: var(--wait); }
+
+.wrap { max-width: 560px; margin: 0 auto; padding-block: 14px 40px; display: flex; flex-direction: column; gap: 12px; }
+.card { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 14px; min-width: 0; }
+.demo { background: var(--wait-bg); color: var(--wait); border-radius: 10px; padding: 10px 12px; font-size: .88rem; font-weight: 500; }
+
+.hero { padding: 16px; }
+.hero.sell { border-color: var(--sell); } .hero.buy { border-color: var(--buy); }
+.tag { font-size: .76rem; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; font-weight: 600; }
+.big { font-family: var(--display); font-weight: 700; font-size: 2.3rem; line-height: 1.05; margin: 2px 0 6px; }
+.big.sell { color: var(--sell); } .big.buy { color: var(--buy); } .big.wait { color: var(--wait); } .big.off { color: var(--off); }
+.lead { margin: 0; color: var(--muted); }
+.valid { display: inline-block; margin: 12px 0 0; padding: 6px 10px; border-radius: 8px; font-size: .86rem; font-weight: 600; }
+.valid.ok { background: var(--buy-bg); color: var(--buy); } .valid.bad { background: var(--sell-bg); color: var(--sell); }
+.levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 14px 0 0; }
+.lv { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); min-width: 0; }
+.lv dt { color: var(--muted); font-size: .76rem; }
+.lv dd { margin: 2px 0 0; font-family: var(--display); font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.lv.sl dd { color: var(--sell); } .lv.tp dd { color: var(--buy); }
+.fine { margin: 10px 0 0; color: var(--muted); font-size: .8rem; }
+
+.facts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.facts li { display: grid; grid-template-columns: 22px 1fr; gap: 6px; align-items: start; }
+.mk { font-weight: 700; text-align: center; color: var(--muted); }
+.ok .mk { color: var(--buy); } .no .mk { color: var(--sell); }
+.why-lead { margin: 0 0 10px; }
+
+.rows { display: flex; flex-direction: column; }
+.row { display: grid; grid-template-columns: 74px auto 1fr; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; padding-top: 0; }
+.row .t { font-variant-numeric: tabular-nums; color: var(--muted); font-size: .86rem; white-space: nowrap; }
+.row .res { text-align: right; font-size: .88rem; font-variant-numeric: tabular-nums; min-width: 0; }
+.res small { display: block; color: var(--muted); font-size: .74rem; }
+.res.win { color: var(--buy); font-weight: 600; } .res.loss { color: var(--sell); font-weight: 600; } .res.open { color: var(--accent); font-weight: 600; }
+.pill { font-family: var(--display); font-weight: 700; font-size: .72rem; letter-spacing: .06em; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.sell { background: var(--sell-bg); color: var(--sell); } .pill.buy { background: var(--buy-bg); color: var(--buy); }
+.empty { color: var(--muted); margin: 0; }
+
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
+.fig { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); }
+.fig b { display: block; font-family: var(--display); font-size: 1.3rem; font-variant-numeric: tabular-nums; }
+.fig span { color: var(--muted); font-size: .76rem; }
+.verdict-note { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--wait-bg); color: var(--wait); font-size: .86rem; }
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field span { font-weight: 600; font-size: .86rem; }
+.field small { color: var(--muted); font-size: .76rem; }
+input[type="text"] { width: 100%; min-width: 0; font-family: var(--display); font-weight: 500; font-size: 1.05rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-variant-numeric: tabular-nums; }
+input[type="text"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note { color: var(--muted); font-size: .8rem; margin: 0; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in gut">
+    <span class="name">EURUSD<small>M15</small></span>
+    <span class="upd"><span id="dot" class="dot"></span><span id="upd">Chargement…</span></span>
+  </div>
+</header>
+
+<main class="wrap gut">
+  <div id="demo" class="demo" hidden>Exemple : tous les chiffres de cette page sont fictifs. Avec le robot en marche, ils se remplissent tout seuls.</div>
+  <section id="verdict" class="card hero" aria-live="polite"></section>
+  <section id="why" class="card"></section>
+  <section id="today" class="card"></section>
+  <section id="stats" class="card"></section>
+  <section class="card">
+    <h2>Ton compte</h2>
+    <div class="grid2">
+      <label class="field"><span>Solde ($)</span><input id="bal" type="text" inputmode="decimal" placeholder="ex. 365"><small>Sert à calculer ton lot. Reste sur ton téléphone.</small></label>
+      <label class="field"><span>Risque par trade (%)</span><input id="rk" type="text" inputmode="decimal" value="1"><small>1 % est une base prudente.</small></label>
+    </div>
+  </section>
+  <p class="note" id="foot">Outil éducatif. Aucun signal ne garantit un gain, et un stop peut être touché même quand tout est réuni. Les résultats passés du robot ne prédisent pas les suivants.</p>
+</main>
+
+<script>
+(function () {
+  var PIP = 0.0001, S = null, NOW = Date.now();
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function parseBar(s) { return new Date(s.replace(' ', 'T') + ':00Z').getTime(); }
+  function hhmm(ms) { return new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+  function ago(min) {
+    if (min < 1) return "à l'instant";
+    if (min < 60) return 'il y a ' + Math.round(min) + ' min';
+    if (min < 2880) return 'il y a ' + String(Math.round(min / 6) / 10).replace('.', ',') + ' h';
+    return 'il y a ' + Math.round(min / 1440) + ' j';
+  }
+  function p5(x) { return Number(x).toFixed(5); }
+  function r2(x) { return (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(2) + ' R'; }
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  function num(v) { var n = parseFloat(String(v || '').replace(',', '.')); return isFinite(n) ? n : NaN; }
+  function dirWord(d) { return d === 'sell' ? 'VENTE' : 'ACHAT'; }
+
+  function lotLine(sig) {
+    var bal = num($('bal').value), rk = num($('rk').value);
+    if (!(rk > 0)) rk = 1;
+    if (!(bal > 0)) return '<div class="lv" style="grid-column:1/-1"><dt>Lot conseillé</dt><dd style="font-size:.95rem">Entre ton solde en bas de la page pour le calculer.</dd></div>';
+    var lot = Math.floor(bal * rk / 100 / (sig.risk_pips * 10) * 100 + 1e-9) / 100;
+    if (lot < 0.01) lot = 0.01;
+    var usd = lot * sig.risk_pips * 10, pct = usd / bal * 100;
+    var out = '<div class="lv"><dt>Lot conseillé</dt><dd>' + lot.toFixed(2) + '</dd></div>' +
+      '<div class="lv"><dt>Perte si stop touché</dt><dd>' + usd.toFixed(2) + ' $ (' + pct.toFixed(1) + ' %)</dd></div>';
+    if (pct > Math.max(rk * 2, 3)) out += '<div class="lv" style="grid-column:1/-1"><dd style="color:var(--sell);font-size:.95rem">Trop gros pour ton compte, même à 0,01 lot. Passe ton tour.</dd></div>';
+    return out;
+  }
+
+  function renderVerdict() {
+    var el = $('verdict'), c = S.context, age = (NOW - new Date(S.generated_at).getTime()) / 60000;
+    var paused = S.stale || age > 35;
+    el.className = 'card hero';
+    if (paused) {
+      el.innerHTML = '<div class="tag">Robot</div><div class="big off">EN PAUSE</div><p class="lead">' +
+        (S.stale ? esc(c.headline) : 'Dernière mise à jour ' + ago(age) + '. Le robot dort hors session et le week-end. Aucun signal à suivre pour l’instant.') + '</p>';
+      return;
+    }
+    var a = S.active;
+    if (a) {
+      var closeMs = parseBar(a.bar_time) + 15 * 60000, sigAge = (NOW - closeMs) / 60000;
+      var dist = (c.price - a.entry) / PIP;
+      var good = sigAge <= 30 && Math.abs(dist) <= 3;
+      el.className = 'card hero ' + a.dir;
+      el.innerHTML = '<div class="tag">Signal en cours · qualité ' + a.score + '/4</div>' +
+        '<div class="big ' + a.dir + '">' + dirWord(a.dir) + '</div>' +
+        '<p class="lead">Bougie fermée à ' + hhmm(closeMs) + ' (' + ago(sigAge) + ').</p>' +
+        '<div class="valid ' + (good ? 'ok' : 'bad') + '">' + (good
+          ? 'Encore valable : prix ' + p5(c.price) + ', à ' + Math.abs(dist).toFixed(1) + ' pips de l’entrée'
+          : 'Trop tard : ' + (sigAge > 30 ? 'le signal date de plus de 30 min' : 'le prix a bougé de ' + Math.abs(dist).toFixed(1) + ' pips') + '. Ne le prends pas.') + '</div>' +
+        '<dl class="levels">' +
+        '<div class="lv"><dt>Entrée (' + (a.dir === 'sell' ? 'SELL' : 'BUY') + ')</dt><dd>' + p5(a.entry) + '</dd></div>' +
+        '<div class="lv sl"><dt>Stop-loss</dt><dd>' + p5(a.sl) + '</dd></div>' +
+        '<div class="lv tp"><dt>Take-profit</dt><dd>' + p5(a.tp) + '</dd></div>' +
+        '<div class="lv"><dt>Risque / gain (pips)</dt><dd>' + a.risk_pips.toFixed(1) + ' / ' + (a.risk_pips * a.rr).toFixed(1) + '</dd></div>' +
+        lotLine(a) + '</dl>' +
+        '<p class="fine">Mets le stop et l’objectif dès l’ouverture de l’ordre. Avec ton spread de ' + S.spread_pips + ' pips, ne prends pas le trade si MT5 affiche un spread bien plus grand.</p>';
+      return;
+    }
+    el.innerHTML = '<div class="tag">Maintenant</div><div class="big wait">ATTENDS</div><p class="lead">' + esc(c.headline) + '</p>';
+  }
+
+  function fact(ok, text) { return '<li class="' + (ok === true ? 'ok' : ok === false ? 'no' : '') + '"><span class="mk" aria-hidden="true">' + (ok === true ? '✓' : ok === false ? '✕' : '•') + '</span><span>' + text + '</span></li>'; }
+  function renderWhy() {
+    var c = S.context, tr = c.trend === 'down' ? 'baissière' : c.trend === 'up' ? 'haussière' : 'pas claire';
+    $('why').innerHTML = '<h2>Ce que voit le robot</h2><ul class="facts">' +
+      fact(c.trend !== 'none', 'Tendance de fond (H1) : ' + tr) +
+      fact(c.session_ok, 'Session ouverte') +
+      fact(c.vol_ok, 'Volatilité normale (' + (c.atr_pips == null ? '?' : c.atr_pips) + ' pips en moyenne)') +
+      fact(null, 'Prix ' + p5(c.price) + ' · moyenne mobile ' + p5(c.ema20) + ' · RSI ' + c.rsi) +
+      '</ul>';
+  }
+
+  function renderToday() {
+    var day = S.bar_time.slice(0, 10);
+    var list = (S.recent || []).filter(function (x) { return x.bar_time.slice(0, 10) === day; });
+    var h = '<h2>Signaux du jour <span>' + S.signals_today + ' / ' + S.max_per_day + '</span></h2>';
+    if (!list.length) { $('today').innerHTML = h + '<p class="empty">Aucun signal aujourd’hui. Le robot préfère ne rien donner que de forcer un mauvais signal.</p>'; return; }
+    h += '<div class="rows">';
+    list.slice().sort(function (a, b) { return a.bar_time < b.bar_time ? 1 : -1; }).forEach(function (x) {
+      var st = x.status === 'open' ? '<div class="res open">En cours</div>'
+        : x.status === 'win' ? '<div class="res win">Gagnant ' + r2(x.r) + '</div>'
+        : x.status === 'loss' ? '<div class="res loss">Perdant ' + r2(x.r) + '</div>'
+        : '<div class="res">Expiré ' + r2(x.r) + '</div>';
+      h += '<div class="row"><span class="t">' + hhmm(parseBar(x.bar_time) + 15 * 60000) + '</span><span class="pill ' + x.dir + '">' + dirWord(x.dir) + '</span>' + st + '</div>';
+    });
+    $('today').innerHTML = h + '</div>';
+  }
+
+  function renderStats() {
+    var s = S.stats, h = '<h2>Résultats du robot</h2>';
+    if (!s.n) { $('stats').innerHTML = h + '<p class="empty">Aucun signal terminé pour l’instant. Les vrais chiffres arrivent avec les premiers signaux.</p>'; return; }
+    h += '<div class="figs">' +
+      '<div class="fig"><b>' + s.n + '</b><span>signaux terminés</span></div>' +
+      '<div class="fig"><b>' + Math.round(s.wins / s.n * 100) + ' %</b><span>gagnants</span></div>' +
+      '<div class="fig"><b>' + r2(s.avg_r) + '</b><span>moyenne par signal</span></div>' +
+      '<div class="fig"><b>' + r2(s.total_r) + '</b><span>total</span></div></div>';
+    if (s.n < 30) h += '<p class="verdict-note">Moins de 30 signaux terminés : trop peu pour juger si le robot est fiable.</p>';
+    else if (s.avg_r <= 0) h += '<p class="verdict-note">Le robot perd en moyenne, spread compris. Ne le suis pas avec de l’argent réel.</p>';
+    h += '<p class="fine">1 R = ce que tu risques sur un signal. Spread de ' + S.spread_pips + ' pips déduit de chaque résultat.</p>';
+    $('stats').innerHTML = h;
+  }
+
+  function renderBar() {
+    var age = (NOW - new Date(S.generated_at).getTime()) / 60000;
+    $('upd').textContent = 'Mis à jour ' + ago(age);
+    $('dot').className = 'dot' + (age <= 20 ? ' fresh' : age <= 35 ? ' aging' : '');
+  }
+
+  function render() {
+    if (!S) return;
+    NOW = S.demo ? new Date(S.generated_at).getTime() + 3 * 60000 : Date.now();
+    $('demo').hidden = !S.demo;
+    renderBar(); renderVerdict(); renderWhy(); renderToday(); renderStats();
+  }
+
+  function empty() {
+    $('upd').textContent = 'Robot pas encore lancé';
+    $('verdict').className = 'card hero';
+    $('verdict').innerHTML = '<div class="tag">Robot</div><div class="big off">PAS ENCORE LANCÉ</div><p class="lead">Le fichier de résultats n’existe pas encore. Sur GitHub, ouvre Actions → Signaux EURUSD → Run workflow, attends une minute, puis reviens ici.</p>';
+    ['why', 'today', 'stats'].forEach(function (k) { $(k).hidden = true; });
+  }
+
+  function statusUrl() {
+    var h = location.hostname;
+    if (/\.github\.io$/.test(h)) {
+      var repo = location.pathname.split('/')[1];
+      if (repo) return 'https://raw.githubusercontent.com/' + h.split('.')[0] + '/' + repo + '/main/status.json';
+    }
+    return 'status.json';
+  }
+
+  function load() {
+    fetch(statusUrl() + '?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('absent'); return r.json(); })
+      .then(function (d) { S = d; ['why', 'today', 'stats'].forEach(function (k) { $(k).hidden = false; }); render(); })
+      .catch(function () { if (!S) empty(); });
+  }
+
+  var b = store('sig-bal'), k = store('sig-rk');
+  if (b) $('bal').value = b;
+  if (k) $('rk').value = k;
+  ['bal', 'rk'].forEach(function (id) {
+    $(id).addEventListener('input', function () { store('sig-' + id, $(id).value); renderVerdict(); });
+  });
+  load();
+  setInterval(load, 60000);
+})();
+</script>
+</body>
+</html>
