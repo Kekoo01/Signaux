@@ -1,0 +1,21 @@
+name: Backtest EURUSD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tester la strategie sur l'historique
+        run: python bot.py backtest
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          CALLMEBOT_KEY: ${{ secrets.CALLMEBOT_KEY }}
+          SPREAD_PIPS: ${{ secrets.SPREAD_PIPS }}
