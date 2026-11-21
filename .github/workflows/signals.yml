@@ -1,0 +1,41 @@
+name: Signaux EURUSD
+
+on:
+  schedule:
+    # Toutes les 15 min, lundi-vendredi, de 07h02 a 17h47 UTC (02h-12h en Jamaique)
+    - cron: "2,17,32,47 7-17 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: signaux
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Analyser la derniere bougie M15
+        run: python bot.py
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          CALLMEBOT_KEY: ${{ secrets.CALLMEBOT_KEY }}
+          BALANCE: ${{ secrets.BALANCE }}
+          RISK_PCT: ${{ secrets.RISK_PCT }}
+          SPREAD_PIPS: ${{ secrets.SPREAD_PIPS }}
+          MAX_PER_DAY: ${{ secrets.MAX_PER_DAY }}
+          MIN_SCORE: ${{ secrets.MIN_SCORE }}
+      - name: Sauvegarder la base de donnees
+        run: |
+          git config user.name "signal-bot"
+          git config user.email "signal-bot@users.noreply.github.com"
+          git add signals.db signals.csv status.json
+          git diff --cached --quiet || (git commit -m "mise a jour des signaux" && git push)
