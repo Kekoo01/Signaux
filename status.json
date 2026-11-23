@@ -1,17 +1,17 @@
 {
  "demo": false,
- "generated_at": "2026-11-21T04:05:58Z",
- "bar_time": "2026-11-21 03:45",
+ "generated_at": "2026-11-23T08:24:07Z",
+ "bar_time": "2026-11-23 08:00",
  "stale": false,
  "context": {
-  "price": 1.09679,
-  "ema20": 1.09687,
-  "rsi": 46.6,
-  "atr_pips": 4.7,
-  "trend": "down",
-  "session_ok": false,
-  "vol_ok": false,
-  "headline": "Hors session : le robot cherche des signaux de 02h à 12h (heure de la Jamaïque), du lundi au vendredi."
+  "price": 1.09895,
+  "ema20": 1.09924,
+  "rsi": 55.2,
+  "atr_pips": 5.2,
+  "trend": "none",
+  "session_ok": true,
+  "vol_ok": true,
+  "headline": "Tendance H1 pas claire : pas de trade tant que le marché n'a pas choisi."
  },
  "active": null,
  "recent": [],
