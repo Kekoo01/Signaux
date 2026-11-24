@@ -1,17 +1,17 @@
 {
  "demo": false,
- "generated_at": "2026-11-24T08:22:24Z",
- "bar_time": "2026-11-24 08:00",
+ "generated_at": "2026-11-24T09:40:03Z",
+ "bar_time": "2026-11-24 09:15",
  "stale": false,
  "context": {
-  "price": 1.09093,
-  "ema20": 1.09083,
-  "rsi": 55.3,
-  "atr_pips": 4.8,
+  "price": 1.09185,
+  "ema20": 1.09114,
+  "rsi": 64.9,
+  "atr_pips": 5.4,
   "trend": "down",
   "session_ok": true,
-  "vol_ok": false,
-  "headline": "Volatilité anormale (5 pips en moyenne) : on attend que ça se calme."
+  "vol_ok": true,
+  "headline": "Tendance H1 baissière. J'attends un rebond vers 1.09114 (moyenne mobile), puis une bougie M15 rouge qui clôture en dessous."
  },
  "active": null,
  "recent": [],
