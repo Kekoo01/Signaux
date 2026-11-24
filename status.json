@@ -1,17 +1,17 @@
 {
  "demo": false,
- "generated_at": "2026-11-24T09:40:03Z",
- "bar_time": "2026-11-24 09:15",
+ "generated_at": "2026-11-24T10:36:59Z",
+ "bar_time": "2026-11-24 10:15",
  "stale": false,
  "context": {
-  "price": 1.09185,
-  "ema20": 1.09114,
-  "rsi": 64.9,
-  "atr_pips": 5.4,
+  "price": 1.09288,
+  "ema20": 1.0918,
+  "rsi": 69.9,
+  "atr_pips": 6.6,
   "trend": "down",
   "session_ok": true,
   "vol_ok": true,
-  "headline": "Tendance H1 baissière. J'attends un rebond vers 1.09114 (moyenne mobile), puis une bougie M15 rouge qui clôture en dessous."
+  "headline": "Tendance H1 baissière. J'attends un rebond vers 1.09180 (moyenne mobile), puis une bougie M15 rouge qui clôture en dessous."
  },
  "active": null,
  "recent": [],
