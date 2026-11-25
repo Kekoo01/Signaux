@@ -1,13 +1,13 @@
 {
  "demo": false,
- "generated_at": "2026-11-25T12:45:23Z",
- "bar_time": "2026-11-25 12:30",
+ "generated_at": "2026-11-25T13:59:53Z",
+ "bar_time": "2026-11-25 13:30",
  "stale": false,
  "context": {
-  "price": 1.09487,
+  "price": 1.09397,
   "ema20": 1.09434,
-  "rsi": 55.9,
-  "atr_pips": 6.5,
+  "rsi": 51.1,
+  "atr_pips": 7.0,
   "trend": "down",
   "session_ok": true,
   "vol_ok": true,
