@@ -1,17 +1,17 @@
 {
  "demo": false,
- "generated_at": "2026-11-25T18:29:38Z",
- "bar_time": "2026-11-25 18:00",
+ "generated_at": "2026-11-26T08:24:56Z",
+ "bar_time": "2026-11-26 08:00",
  "stale": false,
  "context": {
-  "price": 1.09843,
-  "ema20": 1.09631,
-  "rsi": 73.5,
-  "atr_pips": 8.2,
+  "price": 1.09707,
+  "ema20": 1.09677,
+  "rsi": 65.3,
+  "atr_pips": 4.6,
   "trend": "none",
-  "session_ok": false,
-  "vol_ok": true,
-  "headline": "Hors session : le robot cherche des signaux de 02h à 12h (heure de la Jamaïque), du lundi au vendredi."
+  "session_ok": true,
+  "vol_ok": false,
+  "headline": "Volatilité anormale (5 pips en moyenne) : on attend que ça se calme."
  },
  "active": null,
  "recent": [],
