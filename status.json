@@ -1,17 +1,17 @@
 {
  "demo": false,
- "generated_at": "2026-11-26T12:45:32Z",
- "bar_time": "2026-11-26 12:30",
+ "generated_at": "2026-11-26T13:59:10Z",
+ "bar_time": "2026-11-26 13:30",
  "stale": false,
  "context": {
-  "price": 1.09765,
-  "ema20": 1.09718,
-  "rsi": 57.7,
-  "atr_pips": 5.0,
+  "price": 1.09842,
+  "ema20": 1.09735,
+  "rsi": 58.7,
+  "atr_pips": 4.9,
   "trend": "none",
   "session_ok": true,
-  "vol_ok": true,
-  "headline": "Tendance H1 pas claire : pas de trade tant que le marché n'a pas choisi."
+  "vol_ok": false,
+  "headline": "Volatilité anormale (5 pips en moyenne) : on attend que ça se calme."
  },
  "active": null,
  "recent": [],
